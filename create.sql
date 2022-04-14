@@ -23,11 +23,47 @@ CREATE TABLE IF NOT EXISTS insurance_providers (
     PRIMARY KEY (insurance_name)
 );
 
-/*
-CREATE TABLE IF NOT EXISTS prescriptions (
-
+CREATE TABLE IF NOT EXISTS employees (
+    emp_id INT NOT NULL CHECK (emp_id >= 0),
+    name VARCHAR(75) NOT NULL,
+    birthday DATE NOT NULL,
+    salary DECIMAL(10) NOT NULL CHECK (salary >= 0),
+    ssn VARCHAR(11) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    phone_number VARCHAR(50) NOT NULL,
+    dea_number VARCHAR(9)  NOT NULL,
+    medical_license_numner VARCHAR(10) NOT NULL,
+    address VARCHAR(200) NOT NULL,
+    gender VARCHAR(50) NOT NULL
+    PRIMARY KEY (emp_id)
 );
 
+CREATE TABLE IF NOT EXISTS prescriptions (
+    prescription_id INT NOT NULL CHECK (prescription_id >= 0),
+    emp_id INT NOT NULL CHECK (emp_id >= 0),
+    patient_id INT NOT NULL CHECK (patient_id >= 0),
+    drug_name VARCHAR(100) NOT NULL,
+    quantity INT NOT NULL CHECK (quantity >= 0),
+    dose VARCHAR(50) NOT NULL,
+    refills INT NOT NULL CHECK (refills >= 0),
+    instructions TEXT 
+    prescription_date TIMESTAMP NOT NULL
+    pharmacy_address VARCHAR(150) NOT NULL
+    PRIMARY KEY (prescription_id)
+    FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+);
+
+CREATE TABLE IF NOT EXISTS relatives (
+    relative_id INT NOT NULL CHECK (relative_id >= 0),
+    patient_id INT NOT NULL CHECK (patient_id >= 0),
+    relative_type VARCHAR(30) NOT NULL,
+    additional_notes TEXT 
+    PRIMARY KEY (relative_id)
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+);
+
+/*
 CREATE TABLE IF NOT EXISTS referrals (
     
 );
@@ -37,10 +73,6 @@ CREATE TABLE IF NOT EXISTS immunizations (
 );
 
 CREATE TABLE IF NOT EXISTS immunized_by (
-    
-);
-
-CREATE TABLE IF NOT EXISTS employees (
     
 );
 
@@ -61,10 +93,6 @@ CREATE TABLE IF NOT EXISTS covid_exams (
 );
 
 CREATE TABLE IF NOT EXISTS vaccine_administrations (
-    
-);
-
-CREATE TABLE IF NOT EXISTS relatives (
     
 );
 
