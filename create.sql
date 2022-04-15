@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS referrals (
 CREATE TABLE IF NOT EXISTS immunizations (
     immunization_id INT NOT NULL CHECK (immunization_id >= 0),
     immunization_type VARCHAR(50) NOT NULL,
-    PRIMARY KEY (immunization_id),
+    PRIMARY KEY (immunization_id)
 );
 
 CREATE TABLE IF NOT EXISTS immunized_patients (
