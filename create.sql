@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS pharmacies (
 );
 
 CREATE TABLE IF NOT EXISTS patients (
-    patient_id INT NOT NULL CHECK (patient_id >= 0),
+    patient_id SERIAL,
     phone_number VARCHAR(50),
     birthday DATE NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS insurance_providers (
 );
 
 CREATE TABLE IF NOT EXISTS employees (
-    emp_id INT NOT NULL CHECK (emp_id >= 0),
+    emp_id SERIAL,
     name VARCHAR(75) NOT NULL,
     birthday DATE NOT NULL,
     salary DECIMAL(10) NOT NULL CHECK (salary >= 0),
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS employees (
 );
 
 CREATE TABLE IF NOT EXISTS prescriptions (
-    prescription_id INT NOT NULL CHECK (prescription_id >= 0),
+    prescription_id SERIAL,
     emp_id INT NOT NULL CHECK (emp_id >= 0),
     patient_id INT NOT NULL CHECK (patient_id >= 0),
     drug_name VARCHAR(100) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS prescriptions (
 );
 
 CREATE TABLE IF NOT EXISTS relatives (
-    relative_id INT NOT NULL CHECK (relative_id >= 0),
+    relative_id SERIAL,
     patient_id INT NOT NULL CHECK (patient_id >= 0),
     relative_type VARCHAR(30) NOT NULL,
     additional_notes TEXT,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS relatives (
 
 
 CREATE TABLE IF NOT EXISTS referrals (
-    ref_id INT NOT NULL CHECK (ref_id >= 0),
+    ref_id SERIAL,
     emp_id INT NOT NULL CHECK (emp_id >= 0),
     ref_doctor_id INT NOT NULL CHECK (ref_doctor_id >= 0),
     patient_id INT NOT NULL CHECK (patient_id >= 0),
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS referrals (
 
 
 CREATE TABLE IF NOT EXISTS immunizations (
-    immunization_id INT NOT NULL CHECK (immunization_id >= 0),
+    immunization_id SERIAL,
     immunization_type VARCHAR(50) NOT NULL,
     PRIMARY KEY (immunization_id)
 );
