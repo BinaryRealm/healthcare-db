@@ -90,6 +90,14 @@ CREATE TABLE IF NOT EXISTS immunized_patients (
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
 );
 
+CREATE TABLE IF NOT EXISTS medical_conditions (
+    icd_code VARCHAR(7) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    parent_code VARCHAR(7),
+    PRIMARY KEY (icd_code),
+    FOREIGN KEY (parent_code) REFERENCES medical_conditions(icd_code)
+);
+
 /*
 CREATE TABLE IF NOT EXISTS diagnoses (
     
