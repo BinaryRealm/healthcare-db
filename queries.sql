@@ -51,7 +51,7 @@ SELECT * FROM search_graph order by depth;
 /*Get all appointments that a patient has had at this practice.*/
 SELECT a.*
 FROM appointments a, patients p
-WHERE  a.patient_id = p.patient_id AND p.name = "John Smith";
+WHERE  a.patient_id = p.patient_id AND p.name = 'Scott Chandler';
 
 /*Prescribe a medication to a patient*/
 
@@ -65,7 +65,7 @@ SELECT p.patient_id, p.name
 FROM patients p, insurance_covers c, insurance_providers i
 WHERE p.patient_id = c.patient_id 
     AND c.provider_id = i.provider_id 
-    AND i.insurance_name = "Unitedhealth Group";
+    AND i.insurance_name = 'Fisher-Moore';
 
 /*Get all patients that had appointment with certain doctor in the last 7 days
  Used for COVID-19 tracing to notify patients*/
@@ -76,11 +76,11 @@ WHERE p.patient_id = c.patient_id
 /*Get all patients who are vaccinated for a specific vaccine.*/
 
 SELECT p.patient_id, p.name
-FROM patients p, appointment a, exams e, administered_vaccines v
+FROM patients p, appointments a, exams e, administered_vaccines v
 WHERE a.patient_id = p.patient_id
     AND e.app_id = a.app_id
     AND v.exam_id = e.exam_id
-    AND v.vaccine_type = "covid_vaccine"
+    AND v.vaccine_type = 'Tuberculosis';
 
 /*Get all patients who were prescribed a specific drug.
 In case of recall, or price jumps of brand-name */
@@ -88,11 +88,19 @@ In case of recall, or price jumps of brand-name */
 SELECT p.patient_id, p.name
 FROM patients p, prescriptions d
 WHERE d.patient_id = p.patient_id
-    AND d.drug_name = "drug_name"
+    AND d.drug_name = 'drug_name';
     
 /*Get contact info of a patient’s emergency contact*/
+
 
 /*See the date of the most recent appointment of a patient
 For front-desk appointment scheduling.*/
 
 /*Get health metrics (average, min, max) of patient history within a specified time range.*/
+SELECT p.*, AVG(a.weight) AS avg_weight, MIN(a.weight) AS min_weight, 
+    MAX(a.weight) AS max_weight, AVG(a.temperature) AS avg_temperature, 
+    MIN(a.temperature) AS min_temperature, MAX(a.temperature) AS max_temperature, 
+    MAX(a.height) AS height
+FROM appointments a NATURAL JOIN patients p 
+WHERE p."name" ='Scott Chandler' AND a."date" > current_timestamp - INTERVAL '1 year'
+GROUP BY p.patient_id;
