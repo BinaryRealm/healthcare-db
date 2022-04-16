@@ -17,10 +17,11 @@ CREATE TABLE IF NOT EXISTS patients (
 );
 
 CREATE TABLE IF NOT EXISTS insurance_providers (
+    provider_id SERIAL,
     insurance_name VARCHAR(75) NOT NULL,
     policy_number VARCHAR(20) NOT NULL,
     in_network BOOLEAN NOT NULL,
-    PRIMARY KEY (insurance_name)
+    PRIMARY KEY (provider_id)
 );
 
 CREATE TABLE IF NOT EXISTS employees (
@@ -191,34 +192,61 @@ CREATE TABLE IF NOT EXISTS referrable_doctors (
     PRIMARY KEY (ref_doctor_id)
 );
 
-/*
-CREATE TABLE IF NOT EXISTS diagnoses (
-    
+CREATE TABLE IF NOT EXISTS relative_conditions (
+    relative_id SERIAL,
+    icd_code VARCHAR(7) NOT NULL,
+    PRIMARY KEY (relative_id),
+    FOREIGN KEY (icd_code) REFERENCES medical_conditions(icd_code)
 );
 
-
-CREATE TABLE IF NOT EXISTS relative_conditions (
-    
+CREATE TABLE IF NOT EXISTS diagnoses (
+    emp_id INT,
+    patient_id INT,
+    app_id INT,
+    icd_code VARCHAR(7),
+    comment TEXT,
+    PRIMARY KEY (emp_id, patient_id, app_id, icd_code),
+    FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (app_id) REFERENCES appointments(app_id),
+    FOREIGN KEY (icd_code) REFERENCES medical_conditions(icd_code)
 );
 
 CREATE TABLE IF NOT EXISTS appointment_medical_conditions (
-    
+    app_id INT,
+    icd_code VARCHAR(7),
+    comment TEXT,
+    PRIMARY KEY (app_id, icd_code),
+    FOREIGN KEY (app_id) REFERENCES appointments(app_id),
+    FOREIGN KEY (icd_code) REFERENCES medical_conditions(icd_code)
 );
 
+CREATE TABLE IF NOT EXISTS report_creators (
+    report_id	INT,
+    lab_id	INT,
+    PRIMARY KEY (report_id, lab_id),
+    FOREIGN KEY (report_id) REFERENCES lab_reports(report_id),
+    FOREIGN KEY (lab_id) REFERENCES specialized_labs(lab_id)
+);
+
+CREATE TABLE IF NOT EXISTS insurance_covers (
+    provider_id	INT,
+    patient_id	INT,
+    member_id	VARCHAR(12) NOT NULL,
+    group_number	VARCHAR(12) NOT NULL,
+    policy_holder_name	VARCHAR(75) NOT NULL,
+    PRIMARY KEY (provider_id, patient_id),
+    FOREIGN KEY (provider_id) REFERENCES insurance_providers(provider_id),
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+);
+
+
+/*
 
 CREATE TABLE IF NOT EXISTS medical_condition_categories (
     
 );
 
-
-CREATE TABLE IF NOT EXISTS report_creators (
-    
-);
-
-
-CREATE TABLE IF NOT EXISTS insurance_covers (
-    
-);
 
 CREATE TABLE IF NOT EXISTS medical_conditions (
     
