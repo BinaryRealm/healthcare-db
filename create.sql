@@ -65,6 +65,13 @@ CREATE TABLE IF NOT EXISTS relatives (
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
 );
 
+CREATE TABLE IF NOT EXISTS referrable_doctors (
+    ref_doctor_id SERIAL,
+    name VARCHAR(75) NOT NULL,
+    specialization VARCHAR(100),
+    phone_number VARCHAR(50),
+    PRIMARY KEY (ref_doctor_id)
+);
 
 CREATE TABLE IF NOT EXISTS referrals (
     ref_id SERIAL,
@@ -130,7 +137,7 @@ CREATE TABLE IF NOT EXISTS archived_files (
     /* TODO: IMPLEMENT file_blob  */
     PRIMARY KEY (file_id),
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
-    FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+    FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
 );
 
 CREATE TABLE IF NOT EXISTS lab_reports (
@@ -184,14 +191,6 @@ CREATE TABLE IF NOT EXISTS specialized_labs (
     address VARCHAR(200),
     lab_name VARCHAR(200),
     PRIMARY KEY (lab_id)
-);
-
-CREATE TABLE IF NOT EXISTS referrable_doctors (
-    ref_doctor_id SERIAL,
-    name VARCHAR(75) NOT NULL,
-    specialization VARCHAR(100),
-    phone_number VARCHAR(50),
-    PRIMARY KEY (ref_doctor_id)
 );
 
 CREATE TABLE IF NOT EXISTS relative_conditions (
