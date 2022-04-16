@@ -28,13 +28,13 @@ CREATE TABLE IF NOT EXISTS employees (
     emp_id SERIAL,
     name VARCHAR(75) NOT NULL,
     birthday DATE NOT NULL,
-    salary DECIMAL(10) NOT NULL CHECK (salary >= 0),
+    salary int NOT NULL CHECK (salary >= 0),
     ssn VARCHAR(11) NOT NULL,
     role VARCHAR(50) NOT NULL,
     email VARCHAR(255),
     phone_number VARCHAR(50) NOT NULL,
-    dea_number VARCHAR(9)  NOT NULL,
-    medical_license_number VARCHAR(10) NOT NULL,
+    dea_number VARCHAR(9),
+    medical_license_number VARCHAR(10),
     address VARCHAR(200) NOT NULL,
     gender VARCHAR(50) NOT NULL,
     PRIMARY KEY (emp_id)
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS relatives (
     relative_type VARCHAR(30) NOT NULL,
     additional_notes TEXT,
     PRIMARY KEY (relative_id),
-    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS referrable_doctors (
@@ -136,6 +136,7 @@ CREATE TABLE IF NOT EXISTS archived_files (
     emp_id INT,
     file_name VARCHAR(255) NOT NULL,
     /* TODO: IMPLEMENT file_blob  */
+    s3_id VARCHAR(255) NOT NULL,
     PRIMARY KEY (file_id),
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
@@ -198,7 +199,7 @@ CREATE TABLE IF NOT EXISTS relative_conditions (
     relative_id INT,
     icd_code VARCHAR(7) NOT NULL,
     PRIMARY KEY (relative_id, icd_code),
-    FOREIGN KEY (relative_id) REFERENCES relatives(relative_id),
+    FOREIGN KEY (relative_id) REFERENCES relatives(relative_id) ON DELETE CASCADE,
     FOREIGN KEY (icd_code) REFERENCES medical_conditions(icd_code)
 );
 
