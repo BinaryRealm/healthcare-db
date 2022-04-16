@@ -51,7 +51,7 @@ SELECT * FROM search_graph order by depth;
 /*Get all appointments that a patient has had at this practice.*/
 SELECT *
 FROM appointments a, patients p
-WHERE  a.patient_id = p.patient_id AND p.name = "John Smith"
+WHERE  a.patient_id = p.patient_id AND p.name = "John Smith";
 
 /*Prescribe a medication to a patient*/
 
@@ -65,7 +65,7 @@ SELECT p.patient_id, p.name
 FROM patients p, insurance_covers c, insurance_providers i
 WHERE p.patient_id = c.patient_id 
     AND c.provider_id = i.provider_id 
-    AND i.insurance_name = "Unitedhealth Group"
+    AND i.insurance_name = "Unitedhealth Group";
 
 /*Get all patients that had appointment with certain doctor in the last 7 days
  Used for COVID-19 tracing to notify patients*/
