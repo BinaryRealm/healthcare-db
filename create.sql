@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS prescriptions (
     pharmacy_address VARCHAR(150) NOT NULL,
     PRIMARY KEY (prescription_id),
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
-    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (pharmacy_address) REFERENCES pharmacies(pharmacy_address)
 );
 
 CREATE TABLE IF NOT EXISTS relatives (
@@ -111,7 +112,8 @@ CREATE TABLE IF NOT EXISTS appointments (
     height NUMERIC NOT NULL,
     temperature NUMERIC NOT NULL,
     notes TEXT,
-    PRIMARY KEY (app_id)
+    PRIMARY KEY (app_id),
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
 );
 
 CREATE TABLE IF NOT EXISTS tests (
@@ -193,9 +195,10 @@ CREATE TABLE IF NOT EXISTS referrable_doctors (
 );
 
 CREATE TABLE IF NOT EXISTS relative_conditions (
-    relative_id SERIAL,
+    relative_id INT,
     icd_code VARCHAR(7) NOT NULL,
-    PRIMARY KEY (relative_id),
+    PRIMARY KEY (relative_id, icd_code),
+    FOREIGN KEY (relative_id) REFERENCES relatives(relative_id),
     FOREIGN KEY (icd_code) REFERENCES medical_conditions(icd_code)
 );
 
