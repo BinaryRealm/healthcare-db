@@ -31,9 +31,10 @@ CREATE TABLE IF NOT EXISTS employees (
     salary DECIMAL(10) NOT NULL CHECK (salary >= 0),
     ssn VARCHAR(11) NOT NULL,
     role VARCHAR(50) NOT NULL,
+    email VARCHAR(255),
     phone_number VARCHAR(50) NOT NULL,
     dea_number VARCHAR(9)  NOT NULL,
-    medical_license_numner VARCHAR(10) NOT NULL,
+    medical_license_number VARCHAR(10) NOT NULL,
     address VARCHAR(200) NOT NULL,
     gender VARCHAR(50) NOT NULL,
     PRIMARY KEY (emp_id)
