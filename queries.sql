@@ -75,9 +75,21 @@ WHERE p.patient_id = c.patient_id
 
 /*Get all patients who are vaccinated for a specific vaccine.*/
 
+SELECT p.patient_id, p.name
+FROM patients p, appointment a, exams e, administered_vaccines v
+WHERE a.patient_id = p.patient_id
+    AND e.app_id = a.app_id
+    AND v.exam_id = e.exam_id
+    AND v.vaccine_type = "covid_vaccine"
+
 /*Get all patients who were prescribed a specific drug.
 In case of recall, or price jumps of brand-name */
 
+SELECT p.patient_id, p.name
+FROM patients p, prescriptions d
+WHERE d.patient_id = p.patient_id
+    AND d.drug_name = "drug_name"
+    
 /*Get contact info of a patient’s emergency contact*/
 
 /*See the date of the most recent appointment of a patient
