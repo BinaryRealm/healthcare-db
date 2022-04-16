@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS pharmacies (
-    pharmacy_address VARCHAR(150) NOT NULL,
-    pharmacy_name VARCHAR(50) NOT NULL,
+    pharmacy_address VARCHAR(200) NOT NULL,
+    pharmacy_name VARCHAR(75) NOT NULL,
     PRIMARY KEY (pharmacy_address)
 );
 
@@ -98,26 +98,104 @@ CREATE TABLE IF NOT EXISTS medical_conditions (
     FOREIGN KEY (parent_code) REFERENCES medical_conditions(icd_code)
 );
 
+
+CREATE TABLE IF NOT EXISTS appointments (
+    app_id SERIAL,
+    patient_id int NOT NULL,
+    room_number VARCHAR(6),
+    date TIMESTAMP NOT NULL,
+    blood_pressure VARCHAR(7) NOT NULL,
+    weight real NOT NULL,
+    /* Specifying precision of numeric doesn't save space */
+    height NUMERIC NOT NULL,
+    temperature NUMERIC NOT NULL,
+    notes TEXT,
+    PRIMARY KEY (app_id)
+);
+
+CREATE TABLE IF NOT EXISTS tests (
+    test_id SERIAL,
+    test_name VARCHAR(255),
+    PRIMARY KEY (test_id)
+);
+
+CREATE TABLE IF NOT EXISTS archived_files (
+    file_id SERIAL,
+    patient_id INT,
+    emp_id INT,
+    file_name VARCHAR(255) NOT NULL,
+    /* TODO: IMPLEMENT file_blob  */
+    PRIMARY KEY (file_id),
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+);
+
+CREATE TABLE IF NOT EXISTS lab_reports (
+    report_id SERIAL,
+    icd_code VARCHAR(7) NOT NULL,
+    file_id INT,
+    app_id INT,
+    result_info TEXT,
+    PRIMARY KEY (report_id),
+    FOREIGN KEY (app_id) REFERENCES appointments(app_id),
+    FOREIGN KEY (file_id) REFERENCES archived_files(file_id)
+);
+
+CREATE TABLE IF NOT EXISTS exams (
+    exam_id SERIAL,
+    report_id INT NOT NULL,
+    app_id INT NOT NULL,
+    comment TEXT,
+    PRIMARY KEY (exam_id),
+    FOREIGN KEY (report_id) REFERENCES lab_reports(report_id),
+    FOREIGN KEY (app_id) REFERENCES appointments(app_id)
+);
+
+CREATE TABLE IF NOT EXISTS blood_exams (
+    exam_id INT,
+    blood_type VARCHAR(3) NOT NULL,
+    blood_sugar VARCHAR(12) NOT NULL,
+    PRIMARY KEY (exam_id),
+    FOREIGN KEY (exam_id) REFERENCES exams(exam_id)
+);
+
+CREATE TABLE IF NOT EXISTS covid_exams (
+    exam_id INT,
+    test_type VARCHAR(20) NOT NULL,
+    is_positive BOOLEAN,
+    PRIMARY KEY (exam_id),
+    FOREIGN KEY (exam_id) REFERENCES exams(exam_id)
+);
+
+CREATE TABLE IF NOT EXISTS administered_vaccines (
+    exam_id INT,
+    vaccine_type VARCHAR(50) NOT NULL,
+    PRIMARY KEY (exam_id),
+    FOREIGN KEY (exam_id) REFERENCES exams(exam_id)
+);
+
+
+CREATE TABLE IF NOT EXISTS specialized_labs (
+    lab_id SERIAL,
+    phone_number VARCHAR(50),
+    address VARCHAR(200),
+    lab_name VARCHAR(200),
+    PRIMARY KEY (lab_id)
+);
+
+CREATE TABLE IF NOT EXISTS referrable_doctors (
+    ref_doctor_id SERIAL,
+    name VARCHAR(75) NOT NULL,
+    specialization VARCHAR(100),
+    phone_number VARCHAR(50),
+    PRIMARY KEY (ref_doctor_id)
+);
+
 /*
 CREATE TABLE IF NOT EXISTS diagnoses (
     
 );
 
-CREATE TABLE IF NOT EXISTS exams (
-    
-);
-
-CREATE TABLE IF NOT EXISTS blood_exams (
-    
-);
-
-CREATE TABLE IF NOT EXISTS covid_exams (
-    
-);
-
-CREATE TABLE IF NOT EXISTS administered_vaccines (
-    
-);
 
 CREATE TABLE IF NOT EXISTS relative_conditions (
     
@@ -127,33 +205,16 @@ CREATE TABLE IF NOT EXISTS appointment_medical_conditions (
     
 );
 
-CREATE TABLE IF NOT EXISTS archived_files (
-    
-);
-
-CREATE TABLE IF NOT EXISTS appointments (
-    
-);
-
-CREATE TABLE IF NOT EXISTS referrable_doctors (
-    
-);
 
 CREATE TABLE IF NOT EXISTS medical_condition_categories (
     
 );
 
-CREATE TABLE IF NOT EXISTS lab_reports (
-    
-);
 
 CREATE TABLE IF NOT EXISTS report_creators (
     
 );
 
-CREATE TABLE IF NOT EXISTS specialized_labs (
-    
-);
 
 CREATE TABLE IF NOT EXISTS insurance_covers (
     
@@ -171,9 +232,6 @@ CREATE TABLE IF NOT EXISTS accepted_tests (
     
 );
 
-CREATE TABLE IF NOT EXISTS tests (
-    
-);
 
 CREATE TABLE IF NOT EXISTS appointment_employees (
     
