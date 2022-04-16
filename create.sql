@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS appointments (
 
 CREATE TABLE IF NOT EXISTS tests (
     test_id SERIAL,
-    test_name VARCHAR(255),
+    test_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (test_id)
 );
 
@@ -240,29 +240,26 @@ CREATE TABLE IF NOT EXISTS insurance_covers (
     FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
 );
 
-
-/*
-
-CREATE TABLE IF NOT EXISTS medical_condition_categories (
-    
-);
-
-
-CREATE TABLE IF NOT EXISTS medical_conditions (
-    
-);
-
 CREATE TABLE IF NOT EXISTS immunized_employees (
-    
+    immun_id	INT,
+    emp_id	INT,
+    PRIMARY KEY (immun_id, emp_id),
+    FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+    FOREIGN KEY (immun_id) REFERENCES immunizations(immunization_id)
 );
 
 CREATE TABLE IF NOT EXISTS accepted_tests (
-    
+    test_id	INT,
+    lab_id	INT,
+    PRIMARY KEY (test_id, lab_id),
+    FOREIGN KEY (test_id) REFERENCES tests(test_id),
+    FOREIGN KEY (lab_id) REFERENCES specialized_labs(lab_id)
 );
-
 
 CREATE TABLE IF NOT EXISTS appointment_employees (
-    
+    emp_id	INT,
+    app_id	INT,
+    PRIMARY KEY (emp_id, app_id),
+    FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
+    FOREIGN KEY (app_id) REFERENCES appointments(app_id)
 );
-
-*/
