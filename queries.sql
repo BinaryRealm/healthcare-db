@@ -49,7 +49,7 @@ SELECT * FROM search_graph order by depth;
 
 
 /*Get all appointments that a patient has had at this practice.*/
-SELECT *
+SELECT a.*
 FROM appointments a, patients p
 WHERE  a.patient_id = p.patient_id AND p.name = "John Smith";
 
