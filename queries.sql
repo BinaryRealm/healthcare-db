@@ -69,9 +69,41 @@ WHERE p.patient_id = c.patient_id
 
 /*Get all patients that had appointment with certain doctor in the last 7 days
  Used for COVID-19 tracing to notify patients*/
+SELECT p.patient_id, p.name, a.date 
+FROM patients p, appointments a, appointment_employees ae, employees e 
+WHERE p.patient_id = a.patient_id 
+    AND ae.app_id = a.app_id 
+    AND ae.emp_id = e.emp_id 
+    AND e."name" = 'Michael Prince'
+    AND a."date" > current_timestamp - interval '1 week';
+GROUP BY p.patient_id 
 
 /*Get all info about a patient in a single view.
 (doctor wants to get all info on patient)*/
+
+/*Find last 3 appointments */
+SELECT a.* as last_three
+FROM appointments a, patients p 
+WHERE a.patient_id = p.patient_id AND p."name" = 'David Smith' 
+ORDER BY a."date" DESC 
+LIMIT 3;
+
+/*Find medical conditions reported in the last 3 appointments */
+select mc.*
+from (SELECT a.*  
+	FROM appointments a, patients p 
+	WHERE a.patient_id = p.patient_id AND p."name" = 'David Smith' 
+	ORDER BY a."date" DESC 
+	LIMIT 3) as last_three,
+diagnoses d, medical_conditions mc 
+where last_three.app_id = d.app_id and d.icd_code = mc.icd_code;
+
+/*Find 2 most recent prescriptions*/
+SELECT p2.*
+FROM patients p, prescriptions p2 
+WHERE p."name" = 'David Smith'AND p.patient_id = p2.patient_id 
+ORDER BY p2.prescription_date  DESC 
+LIMIT 2;
 
 /*Get all patients who are vaccinated for a specific vaccine.*/
 
@@ -95,6 +127,10 @@ WHERE d.patient_id = p.patient_id
 
 /*See the date of the most recent appointment of a patient
 For front-desk appointment scheduling.*/
+SELECT MAX(a.date) 
+FROM patients p, appointments a 
+WHERE p."name" = 'Thomas Moon' 
+	AND p.patient_id = a.patient_id
 
 /*Get health metrics (average, min, max) of patient history within a specified time range.*/
 SELECT p.*, AVG(a.weight) AS avg_weight, MIN(a.weight) AS min_weight, 
