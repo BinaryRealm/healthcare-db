@@ -51,7 +51,7 @@ SELECT * FROM search_graph order by depth;
 /*Get all appointments that a patient has had at this practice.*/
 SELECT a.*
 FROM appointments a, patients p
-WHERE  a.patient_id = p.patient_id AND p.name = 'Scott Chandler';
+WHERE  a.patient_id = p.patient_id AND p.name = 'Thomas Moon';
 
 /*Prescribe a medication to a patient*/
 
@@ -65,7 +65,7 @@ SELECT p.patient_id, p.name
 FROM patients p, insurance_covers c, insurance_providers i
 WHERE p.patient_id = c.patient_id 
     AND c.provider_id = i.provider_id 
-    AND i.insurance_name = 'Fisher-Moore';
+    AND i.insurance_name = 'Purple Shield';
 
 /*Get all patients that had appointment with certain doctor in the last 7 days
  Used for COVID-19 tracing to notify patients*/
@@ -85,10 +85,10 @@ WHERE a.patient_id = p.patient_id
 /*Get all patients who were prescribed a specific drug.
 In case of recall, or price jumps of brand-name */
 
-SELECT p.patient_id, p.name
+SELECT DISTINCT p.patient_id, p.name
 FROM patients p, prescriptions d
 WHERE d.patient_id = p.patient_id
-    AND d.drug_name = 'drug_name';
+    AND d.drug_name = 'Albuterol';
     
 /*Get contact info of a patient’s emergency contact*/
 
@@ -102,5 +102,20 @@ SELECT p.*, AVG(a.weight) AS avg_weight, MIN(a.weight) AS min_weight,
     MIN(a.temperature) AS min_temperature, MAX(a.temperature) AS max_temperature, 
     MAX(a.height) AS height
 FROM appointments a NATURAL JOIN patients p 
-WHERE p."name" ='Scott Chandler' AND a."date" > current_timestamp - INTERVAL '1 year'
+WHERE p."name" ='Thomas Moon' AND a."date" > current_timestamp - INTERVAL '1 year'
 GROUP BY p.patient_id;
+
+/* Find the most prescribed medications */
+SELECT drug_name, count(*) AS count 
+FROM prescriptions p 
+GROUP BY drug_name 
+ORDER BY count DESC;
+
+
+/* Find all the patients with the top 5 most appointments */
+SELECT count(*) AS count, p.* 
+FROM appointments a, patients p
+WHERE a.patient_id = p.patient_id 
+GROUP BY p.patient_id 
+ORDER BY count DESC
+LIMIT 5;
