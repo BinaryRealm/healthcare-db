@@ -119,3 +119,12 @@ WHERE a.patient_id = p.patient_id
 GROUP BY p.patient_id 
 ORDER BY count DESC
 LIMIT 5;
+
+/* Sort all patients in descending order of the number of appointments they had in the past week */
+SELECT count(*) AS count, p.* 
+FROM appointments a, patients p
+WHERE a.patient_id = p.patient_id AND a."date" > current_timestamp - INTERVAL '1 week'
+GROUP BY p.patient_id 
+ORDER BY count DESC
+
+
