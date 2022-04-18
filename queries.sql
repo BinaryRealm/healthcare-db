@@ -54,6 +54,8 @@ FROM appointments a, patients p
 WHERE  a.patient_id = p.patient_id AND p.name = 'Thomas Moon';
 
 /*Prescribe a medication to a patient*/
+INSERT INTO prescriptions (prescription_id, emp_id, patient_id, drug_name, quantity, dose, refills, instructions, prescription_date, pharmacy_address)
+VALUES (DEFAULT, 1, 2, 'Tylenol', 100, '500 mg', 1, 'Take when headache', '2022-04-25 11:32:30+00', '647 Michael Trafficway Apt. 037\nNew Evelyn, AL 19289');
 
 /*Provide a patient a referral to a specialized doctor*/
 
