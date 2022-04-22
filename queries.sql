@@ -136,7 +136,10 @@ WHERE d.patient_id = p.patient_id
     AND d.drug_name = 'Albuterol';
     
 /*Get contact info of a patient’s emergency contact*/
-
+SELECT c.name, c.phone_1, c.phone_2
+FROM patients p, emergency_contacts c
+WHERE p.patient_id = c.patient_id
+    AND p.name = 'Thomas Moon';
 
 /*See the date of the most recent appointment of a patient
 For front-desk appointment scheduling.*/
