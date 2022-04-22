@@ -58,6 +58,17 @@ INSERT INTO prescriptions (prescription_id, emp_id, patient_id, drug_name, quant
 VALUES (DEFAULT, 1, 2, 'Tylenol', 100, '500 mg', 1, 'Take when headache', '2022-04-25 11:32:30+00', '647 Michael Trafficway Apt. 037\nNew Evelyn, AL 19289');
 
 /*Provide a patient a referral to a specialized doctor*/
+INSERT INTO referrals (emp_id, ref_doctor_id, patient_id)
+VALUES (19, 7, 25)
+
+/* Get recently frequent patients (More than 5 appointments in the past week)*/
+SELECT p.patient_id, p.name
+FROM patients p
+WHERE 5 < (SELECT count(*)
+			FROM appointments a 
+			WHERE p.patient_id = a.patient_id
+			    AND a."date" > current_timestamp - interval '1 week')
+GROUP BY p.patient_id 
 
 /*Create a new patient, and add their family history*/
 
