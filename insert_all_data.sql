@@ -1,4 +1,4 @@
-TRUNCATE accepted_tests, tests, relative_conditions, relatives, report_creators, specialized_labs, insurance_covers, insurance_providers, immunized_patients, covid_exams, blood_exams, administered_vaccines, referrals, referrable_doctors, prescriptions, pharmacies, immunized_employees, immunizations, exams, lab_reports, archived_files, diagnoses, appointment_medical_conditions, medical_conditions, appointment_employees, employees, appointments, patients;
+TRUNCATE accepted_tests, tests, relative_conditions, relatives, report_creators, specialized_labs, insurance_covers, insurance_providers, immunized_patients, covid_exams, blood_exams, administered_vaccines, referrals, referrable_doctors, prescriptions, pharmacies, immunized_employees, immunizations, exams, lab_reports, archived_files, diagnoses, appointment_medical_conditions, medical_conditions, appointment_employees, employees, appointments, patients, emergency_contacts;
 
 /* INSERT DATA INTO `medical_conditions` TABLE */
 INSERT INTO medical_conditions (icd_code, name, parent_code) VALUES

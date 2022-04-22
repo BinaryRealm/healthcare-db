@@ -267,3 +267,12 @@ CREATE TABLE IF NOT EXISTS appointment_employees (
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id),
     FOREIGN KEY (app_id) REFERENCES appointments(app_id)
 );
+
+CREATE TABLE IF NOT EXISTS emergency_contacts (
+  name VARCHAR(75) NOT NULL,
+  patient_id INT NOT NULL CHECK (patient_id >= 0),
+  phone_1 VARCHAR(50) NOT NULL,
+  phone_2 VARCHAR(50),
+  PRIMARY KEY (name, patient_id),
+  FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
+);
