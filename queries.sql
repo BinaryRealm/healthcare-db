@@ -59,7 +59,7 @@ VALUES (DEFAULT, 1, 2, 'Tylenol', 100, '500 mg', 1, 'Take when headache', '2022-
 
 /*Provide a patient a referral to a specialized doctor*/
 INSERT INTO referrals (emp_id, ref_doctor_id, patient_id)
-VALUES (19, 7, 25)
+VALUES (19, 7, 25);
 
 /* Get recently frequent patients (More than 5 appointments in the past week)*/
 SELECT p.patient_id, p.name
@@ -68,7 +68,7 @@ WHERE 5 < (SELECT count(*)
 			FROM appointments a 
 			WHERE p.patient_id = a.patient_id
 			    AND a."date" > current_timestamp - interval '1 week')
-GROUP BY p.patient_id 
+GROUP BY p.patient_id;
 
 /*Create a new patient, and add their family history*/
 
@@ -89,7 +89,7 @@ WHERE p.patient_id = a.patient_id
     AND ae.emp_id = e.emp_id 
     AND e."name" = 'Michael Prince'
     AND a."date" > current_timestamp - interval '1 week';
-GROUP BY p.patient_id 
+GROUP BY p.patient_id ;
 
 /*Get all info about a patient in a single view.
 (doctor wants to get all info on patient)*/
@@ -146,7 +146,7 @@ For front-desk appointment scheduling.*/
 SELECT MAX(a.date) 
 FROM patients p, appointments a 
 WHERE p."name" = 'Thomas Moon' 
-	AND p.patient_id = a.patient_id
+	AND p.patient_id = a.patient_id;
 
 /*Get health metrics (average, min, max) of patient history within a specified time range.*/
 SELECT p.*, AVG(a.weight) AS avg_weight, MIN(a.weight) AS min_weight, 
@@ -177,6 +177,6 @@ SELECT count(*) AS count, p.*
 FROM appointments a, patients p
 WHERE a.patient_id = p.patient_id AND a."date" > current_timestamp - INTERVAL '1 week'
 GROUP BY p.patient_id 
-ORDER BY count DESC
+ORDER BY count DESC;
 
 
