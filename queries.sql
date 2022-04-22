@@ -70,6 +70,13 @@ WHERE 5 < (SELECT count(*)
 			    AND a."date" > current_timestamp - interval '1 week')
 GROUP BY p.patient_id;
 
+/* More efficient version than above? */
+SELECT p.patient_id, p.name	
+FROM patients p JOIN appointments a USING(patient_id) 
+WHERE a."date" > current_timestamp - interval '1 week'
+GROUP BY p.patient_id
+HAVING count(*) > 5;
+
 /*Create a new patient, and add their family history*/
 
 WITH pid AS (
