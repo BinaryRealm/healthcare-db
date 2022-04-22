@@ -72,6 +72,24 @@ GROUP BY p.patient_id;
 
 /*Create a new patient, and add their family history*/
 
+WITH pid AS (
+	INSERT INTO patients (address, birthday, email, gender, name, patient_id, phone_number, ssn) 
+	VALUES ('1600 Pennsylvania Avenue NW, Washington, DC 20500', '1900-11-14', 'test@test.com', 'Male', 'Bill Bob', DEFAULT, '(604)876-1234', '123-78-8888')
+	RETURNING patient_id
+	),
+	rid AS(
+		INSERT INTO relatives (additional_notes, patient_id, relative_id, relative_type)
+		VALUES ('History of cancer', (select patient_id from pid), DEFAULT, 'father'),
+		('History of stroke', (select patient_id from pid), DEFAULT, 'mother')
+		RETURNING relative_id
+	)
+INSERT INTO relative_conditions (icd_code, relative_id)
+VALUES ('R6884', (SELECT relative_id FROM rid LIMIT 1)),
+	   ('R40211', (SELECT relative_id FROM rid LIMIT 1)),
+	   ('R87614', (SELECT relative_id FROM rid LIMIT 1 OFFSET 1)),
+	   ('R297', (SELECT relative_id FROM rid LIMIT 1 OFFSET 1));
+
+
 /*Get all patients based on their insurance provider*/
 
 SELECT p.patient_id, p.name
