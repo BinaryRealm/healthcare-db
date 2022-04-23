@@ -31,7 +31,7 @@ WHERE  a.patient_id = p.patient_id AND p.name = 'Thomas Moon';
 
 /*Prescribe a medication to a patient*/
 INSERT INTO prescriptions (prescription_id, emp_id, patient_id, drug_name, quantity, dose, refills, instructions, prescription_date, pharmacy_address)
-VALUES (DEFAULT, 1, 2, 'Tylenol', 100, '500 mg', 1, 'Take when headache', '2022-04-25 11:32:30+00', '647 Michael Trafficway Apt. 037\nNew Evelyn, AL 19289');
+VALUES (DEFAULT, 1, 2, 'Tylenol', 100, '500 mg', 1, 'Take when headache', '2022-04-25 11:32:30+00', '16401 Erin Inlet\nPhillipstad, AL 58261');
 
 /*Provide a patient a referral to a specialized doctor*/
 INSERT INTO referrals (emp_id, ref_doctor_id, patient_id)
@@ -79,9 +79,9 @@ FROM patients p, appointments a, appointment_employees ae, employees e
 WHERE p.patient_id = a.patient_id 
     AND ae.app_id = a.app_id 
     AND ae.emp_id = e.emp_id 
-    AND e."name" = 'Michael Prince'
+    AND e."name" = 'Calvin Morales'
     AND a."date" > current_timestamp - interval '1 week'
--- GROUP BY p.patient_id ; <--- causes error?
+GROUP BY p.patient_id, a.date;
 
 /*Get all info about a patient in a single view.
 (doctor wants to get all info on patient)*/
@@ -117,7 +117,7 @@ FROM patients p, appointments a, exams e, administered_vaccines v
 WHERE a.patient_id = p.patient_id
     AND e.app_id = a.app_id
     AND v.exam_id = e.exam_id
-    AND v.vaccine_type = 'Tuberculosis';
+    AND v.vaccine_type = 'Poliovirus';
 
 /*Get all patients who were prescribed a specific drug.
 In case of recall, or price jumps of brand-name */
@@ -131,13 +131,13 @@ WHERE d.patient_id = p.patient_id
 SELECT c.name, c.phone_1, c.phone_2
 FROM patients p, emergency_contacts c
 WHERE p.patient_id = c.patient_id
-    AND p.name = 'Thomas Moon';
+    AND p.name = 'John Carlson';
 
 /*See the date of the most recent appointment of a patient
 For front-desk appointment scheduling.*/
 SELECT MAX(a.date) 
 FROM patients p, appointments a 
-WHERE p."name" = 'Christina Smith' 
+WHERE p."name" = 'Chelsea Cantu' 
 	AND p.patient_id = a.patient_id;
 
 /*Get health metrics (average, min, max) of patient history within a specified time range.*/
