@@ -276,3 +276,8 @@ CREATE TABLE IF NOT EXISTS emergency_contacts (
   PRIMARY KEY (name, patient_id),
   FOREIGN KEY (patient_id) REFERENCES patients(patient_id)
 );
+
+CREATE INDEX idx_patient_name ON patients USING HASH (name);
+CREATE INDEX idx_appointment_date ON appointments (date DESC);
+CREATE INDEX appointment_patient_id ON appointments USING HASH (patient_id);
+CREATE INDEX prescription_drug_name ON prescriptions USING HASH (drug_name);
