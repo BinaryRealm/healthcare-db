@@ -7,35 +7,11 @@ WITH RECURSIVE search_graph(icd_code, parent_code, name, depth) AS (
     SELECT g.icd_code, g.parent_code, g.name, sg.depth + 1
     FROM medical_conditions g, search_graph sg
     WHERE g.icd_code  = sg.parent_code
-) CYCLE icd_code SET is_cycle USING path
-SELECT * FROM search_graph;
-
-/* Previous query but without unnecessary cycle detection */
-WITH RECURSIVE search_graph(icd_code, parent_code, name, depth) AS (
-    SELECT g.icd_code, g.parent_code, g.name, 1
-    FROM medical_conditions g
-    where g.icd_code ='R94118'
-  UNION ALL
-    SELECT g.icd_code, g.parent_code, g.name, sg.depth + 1
-    FROM medical_conditions g, search_graph sg
-    WHERE g.icd_code  = sg.parent_code
 )
 SELECT * FROM search_graph order by depth;
 
+
 /* HOW TO FIND ALL CHILDREN SUB(CATEGORIES)/CODES THE CURRENT (SUB)CATEGORY 'R93' HAS */
-WITH RECURSIVE search_graph(icd_code, parent_code, name, depth) AS (
-    SELECT g.icd_code, g.parent_code, g.name, 1
-    FROM medical_conditions g
-    where g.icd_code = 'R93'
-  UNION ALL
-    SELECT g.icd_code, g.parent_code, g.name, sg.depth + 1
-    FROM medical_conditions g, search_graph sg
-    WHERE sg.icd_code = g.parent_code 
-) CYCLE icd_code SET is_cycle USING path
-SELECT * FROM search_graph;
-
-
-/* Previous query but without unnecessary cycle detection */
 WITH RECURSIVE search_graph(icd_code, parent_code, name, depth) AS (
     SELECT g.icd_code, g.parent_code, g.name, 1
     FROM medical_conditions g
@@ -62,15 +38,6 @@ INSERT INTO referrals (emp_id, ref_doctor_id, patient_id)
 VALUES (19, 7, 25);
 
 /* Get recently frequent patients (More than 5 appointments in the past week)*/
-SELECT p.patient_id, p.name
-FROM patients p
-WHERE 5 < (SELECT count(*)
-			FROM appointments a 
-			WHERE p.patient_id = a.patient_id
-			    AND a."date" > current_timestamp - interval '1 week')
-GROUP BY p.patient_id;
-
-/* More efficient version than above? */
 SELECT p.patient_id, p.name	
 FROM patients p JOIN appointments a USING(patient_id) 
 WHERE a."date" > current_timestamp - interval '1 week'
@@ -113,8 +80,8 @@ WHERE p.patient_id = a.patient_id
     AND ae.app_id = a.app_id 
     AND ae.emp_id = e.emp_id 
     AND e."name" = 'Michael Prince'
-    AND a."date" > current_timestamp - interval '1 week';
-GROUP BY p.patient_id ;
+    AND a."date" > current_timestamp - interval '1 week'
+-- GROUP BY p.patient_id ; <--- causes error?
 
 /*Get all info about a patient in a single view.
 (doctor wants to get all info on patient)*/
