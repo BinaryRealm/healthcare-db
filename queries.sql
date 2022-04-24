@@ -1,10 +1,10 @@
 /* HOW TO FIND ALL PARENT (SUB)CATEGORIES A CONDITION 'R94118' IS A PART OF */
-WITH RECURSIVE search_graph(icd_code, parent_code, name, depth) AS (
-    SELECT mc.icd_code, mc.parent_code, mc.name, 1
+WITH RECURSIVE search_graph(icd_code, parent_code, name, is_code, depth) AS (
+    SELECT mc.icd_code, mc.parent_code, mc.name, mc.is_code, 1
     FROM medical_conditions mc
     where mc.icd_code ='R94118'
   UNION ALL
-    SELECT mc.icd_code, mc.parent_code, mc.name, sg.depth + 1
+    SELECT mc.icd_code, mc.parent_code, mc.name, mc.is_code, sg.depth + 1
     FROM medical_conditions mc, search_graph sg
     WHERE mc.icd_code = sg.parent_code
 )
@@ -12,17 +12,16 @@ SELECT * FROM search_graph order by depth;
 
 
 /* HOW TO FIND ALL CHILDREN SUB(CATEGORIES)/CODES THE CURRENT (SUB)CATEGORY 'R93' HAS */
-WITH RECURSIVE search_graph(icd_code, parent_code, name, depth) AS (
-    SELECT mc.icd_code, mc.parent_code, mc.name, 1
+WITH RECURSIVE search_graph(icd_code, parent_code, name, is_code, depth) AS (
+    SELECT mc.icd_code, mc.parent_code, mc.name, mc.is_code, 1
     FROM medical_conditions mc
     where mc.icd_code = 'R93'
   UNION ALL
-    SELECT mc.icd_code, mc.parent_code, mc.name, sg.depth + 1
+    SELECT mc.icd_code, mc.parent_code, mc.name, mc.is_code, sg.depth + 1
     FROM medical_conditions mc, search_graph sg
     WHERE sg.icd_code = mc.parent_code 
 )
 SELECT * FROM search_graph order by depth;
-
 
 /*Get all appointments that a patient has had at this practice.*/
 SELECT a.*
@@ -74,12 +73,12 @@ WHERE p.patient_id = c.patient_id
 
 /*Get all patients that had appointment with certain doctor in the last 7 days
  Used for COVID-19 tracing to notify patients*/
-SELECT p.patient_id, p.name, a.date 
+SELECT DISTINCT(p.patient_id), p.name, a.date 
 FROM patients p, appointments a, appointment_employees ae, employees e 
 WHERE p.patient_id = a.patient_id 
     AND ae.app_id = a.app_id 
     AND ae.emp_id = e.emp_id 
-    AND e."name" = 'Calvin Morales'
+    AND e."name" = 'Nathan Benjamin'
     AND a."date" > current_timestamp - interval '1 week'
 GROUP BY p.patient_id, a.date;
 
@@ -119,6 +118,13 @@ WHERE a.patient_id = p.patient_id
     AND v.exam_id = e.exam_id
     AND v.vaccine_type = 'Poliovirus';
 
+/* IMPROVED VACCINATION because it accounts for vaccinations that occurr outside practice  */
+SELECT p.*
+FROM immunized_patients ip 
+	JOIN patients p USING(patient_id)
+	JOIN immunizations i ON ip.immun_id = i.immunization_id 
+	WHERE i.immunization_type = 'Poliovirus';
+
 /*Get all patients who were prescribed a specific drug.
 In case of recall, or price jumps of brand-name */
 
@@ -131,7 +137,7 @@ WHERE d.patient_id = p.patient_id
 SELECT c.name, c.phone_1, c.phone_2
 FROM patients p, emergency_contacts c
 WHERE p.patient_id = c.patient_id
-    AND p.name = 'John Carlson';
+    AND p.name = 'Barbara Jones';
 
 /*See the date of the most recent appointment of a patient
 For front-desk appointment scheduling.*/
@@ -146,7 +152,7 @@ SELECT p.*, AVG(a.weight) AS avg_weight, MIN(a.weight) AS min_weight,
     MIN(a.temperature) AS min_temperature, MAX(a.temperature) AS max_temperature, 
     MAX(a.height) AS height
 FROM appointments a NATURAL JOIN patients p 
-WHERE p."name" ='Thomas Moon' AND a."date" > current_timestamp - INTERVAL '1 year'
+WHERE p."name" ='Amanda Zavala' AND a."date" > current_timestamp - INTERVAL '1 year'
 GROUP BY p.patient_id;
 
 /* Find the most prescribed medications */
@@ -170,5 +176,3 @@ FROM appointments a, patients p
 WHERE a.patient_id = p.patient_id AND a."date" > current_timestamp - INTERVAL '1 week'
 GROUP BY p.patient_id 
 ORDER BY count DESC;
-
-
