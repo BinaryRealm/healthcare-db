@@ -15,7 +15,7 @@ SELECT * FROM search_graph order by depth;
 WITH RECURSIVE search_graph(icd_code, parent_code, name, is_code, depth) AS (
     SELECT mc.icd_code, mc.parent_code, mc.name, mc.is_code, 1
     FROM medical_conditions mc
-    where mc.icd_code = 'R93'
+    where mc.icd_code = 'R048'
   UNION ALL
     SELECT mc.icd_code, mc.parent_code, mc.name, mc.is_code, sg.depth + 1
     FROM medical_conditions mc, search_graph sg
@@ -79,9 +79,7 @@ WHERE p.patient_id = a.patient_id
     AND ae.app_id = a.app_id 
     AND ae.emp_id = e.emp_id 
     AND e."name" = 'Nathan Benjamin'
-    AND a."date" > current_timestamp - interval '1 week'
-GROUP BY p.patient_id, a.date;
-
+    AND a."date" > current_timestamp - interval '1 week';
 /*Get all info about a patient in a single view.
 (doctor wants to get all info on patient)*/
 
