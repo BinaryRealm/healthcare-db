@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS medical_conditions (
     icd_code VARCHAR(7) NOT NULL,
     name VARCHAR(255) NOT NULL,
     parent_code VARCHAR(7),
+    is_code BOOLEAN DEFAULT False,
     PRIMARY KEY (icd_code),
     FOREIGN KEY (parent_code) REFERENCES medical_conditions(icd_code)
 );
