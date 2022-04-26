@@ -103,12 +103,12 @@ where last_three.app_id = d.app_id and d.icd_code = mc.icd_code;
 /*Find 2 most recent prescriptions*/
 SELECT p2.*
 FROM patients p, prescriptions p2 
-WHERE p."name" = 'David Smith'AND p.patient_id = p2.patient_id 
+WHERE p."name" = 'David Smith'
+  AND p.patient_id = p2.patient_id 
 ORDER BY p2.prescription_date  DESC 
 LIMIT 2;
 
 /*Get all patients who are vaccinated for a specific vaccine.*/
-
 SELECT p.patient_id, p.name
 FROM patients p, appointments a, exams e, administered_vaccines v
 WHERE a.patient_id = p.patient_id
@@ -125,7 +125,6 @@ FROM immunized_patients ip
 
 /*Get all patients who were prescribed a specific drug.
 In case of recall, or price jumps of brand-name */
-
 SELECT DISTINCT p.patient_id, p.name
 FROM patients p, prescriptions d
 WHERE d.patient_id = p.patient_id

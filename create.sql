@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TABLE IF NOT EXISTS pharmacies (
     pharmacy_address VARCHAR(200) NOT NULL,
     pharmacy_name VARCHAR(75) NOT NULL,
@@ -143,25 +145,27 @@ CREATE TABLE IF NOT EXISTS archived_files (
     FOREIGN KEY (emp_id) REFERENCES employees(emp_id)
 );
 
+
+CREATE TABLE IF NOT EXISTS exams (
+    exam_id SERIAL,
+    app_id INT NOT NULL,
+    comment TEXT,
+    PRIMARY KEY (exam_id),
+    FOREIGN KEY (app_id) REFERENCES appointments(app_id)
+);
+
 CREATE TABLE IF NOT EXISTS lab_reports (
     report_id SERIAL,
     icd_code VARCHAR(7) NOT NULL,
     file_id INT,
     app_id INT,
+    exam_id INT,
     result_info TEXT,
     PRIMARY KEY (report_id),
     FOREIGN KEY (app_id) REFERENCES appointments(app_id),
-    FOREIGN KEY (file_id) REFERENCES archived_files(file_id)
-);
-
-CREATE TABLE IF NOT EXISTS exams (
-    exam_id SERIAL,
-    report_id INT NOT NULL,
-    app_id INT NOT NULL,
-    comment TEXT,
-    PRIMARY KEY (exam_id),
-    FOREIGN KEY (report_id) REFERENCES lab_reports(report_id),
-    FOREIGN KEY (app_id) REFERENCES appointments(app_id)
+    FOREIGN KEY (file_id) REFERENCES archived_files(file_id),
+    FOREIGN KEY (icd_code) REFERENCES medical_conditions(icd_code),
+    FOREIGN KEY (exam_id) REFERENCES exams(exam_id)
 );
 
 CREATE TABLE IF NOT EXISTS blood_exams (
@@ -282,3 +286,4 @@ CREATE INDEX idx_patient_name ON patients USING HASH (name);
 CREATE INDEX idx_appointment_date ON appointments (date DESC);
 CREATE INDEX appointment_patient_id ON appointments USING HASH (patient_id);
 CREATE INDEX prescription_drug_name ON prescriptions USING HASH (drug_name);
+COMMIT;
