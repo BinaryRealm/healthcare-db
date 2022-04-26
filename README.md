@@ -27,7 +27,7 @@ psql -h localhost # to test
 
 ```
 
-# To create the database in Heroku:
+# To Create the Database in Heroku:
 
 ``` Bash
 heroku create
