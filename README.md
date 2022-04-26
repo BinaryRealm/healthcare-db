@@ -1,6 +1,6 @@
 # To Install Heroku CLI and PostgreSQL:
 
-## Linux:
+## Linux/WSL:
 
 ``` Bash
 sudo curl https://cli-assets.heroku.com/install.sh | sh # install Heroku
@@ -30,6 +30,8 @@ psql -h localhost # to test
 # To Create the Database in Heroku:
 
 ``` Bash
+heroku login -i
+
 heroku create
 
 heroku addons:create heroku-postgresql:hobby-dev
