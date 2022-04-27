@@ -144,7 +144,7 @@ WHERE p.patient_id = c.patient_id
 For front-desk appointment scheduling.*/
 SELECT MAX(a.date) 
 FROM patients p, appointments a 
-WHERE p."name" = 'Chelsea Cantu' 
+WHERE p.patient_id = 47
 	AND p.patient_id = a.patient_id;
 
 /*Get health metrics (average, min, max) of patient history within a specified time range.*/
@@ -153,7 +153,7 @@ SELECT p.*, AVG(a.weight) AS avg_weight, MIN(a.weight) AS min_weight,
     MIN(a.temperature) AS min_temperature, MAX(a.temperature) AS max_temperature, 
     MAX(a.height) AS height
 FROM appointments a NATURAL JOIN patients p 
-WHERE p."name" ='Amanda Zavala' 
+WHERE p.patient_id = 2
   AND a."date" > current_timestamp - INTERVAL '1 year'
 GROUP BY p.patient_id;
 
