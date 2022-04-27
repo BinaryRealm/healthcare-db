@@ -26,7 +26,7 @@ SELECT * FROM search_graph order by depth;
 /*Get all appointments that a patient has had at this practice.*/
 SELECT a.*
 FROM appointments a, patients p
-WHERE  a.patient_id = p.patient_id AND p.name = 'Thomas Moon';
+WHERE  a.patient_id = p.patient_id AND p.patient_id = 1;
 
 /*Prescribe a medication to a patient*/
 INSERT INTO prescriptions (prescription_id, emp_id, patient_id, drug_name, quantity, dose, refills, instructions, prescription_date, pharmacy_address)
@@ -73,12 +73,13 @@ WHERE p.patient_id = c.patient_id
 
 /*Get all patients that had appointment with certain doctor in the last 7 days
  Used for COVID-19 tracing to notify patients*/
+
 SELECT DISTINCT(p.patient_id), p.name, a.date 
 FROM patients p, appointments a, appointment_employees ae, employees e 
 WHERE p.patient_id = a.patient_id 
     AND ae.app_id = a.app_id 
     AND ae.emp_id = e.emp_id 
-    AND e."name" = 'Nathan Benjamin'
+    AND e.emp_id = 116
     AND a."date" > current_timestamp - interval '1 week';
 /*Get all info about a patient in a single view.
 (doctor wants to get all info on patient)*/
@@ -86,7 +87,8 @@ WHERE p.patient_id = a.patient_id
 /*Find last 3 appointments */
 SELECT a.* as last_three
 FROM appointments a, patients p 
-WHERE a.patient_id = p.patient_id AND p."name" = 'David Smith' 
+WHERE a.patient_id = p.patient_id 
+  AND p.patient_id = 26
 ORDER BY a."date" DESC 
 LIMIT 3;
 
@@ -94,7 +96,8 @@ LIMIT 3;
 select mc.*
 from (SELECT a.*  
 	FROM appointments a, patients p 
-	WHERE a.patient_id = p.patient_id AND p."name" = 'David Smith' 
+	WHERE a.patient_id = p.patient_id 
+    AND p.patient_id = 26 
 	ORDER BY a."date" DESC 
 	LIMIT 3) as last_three,
 diagnoses d, medical_conditions mc 
@@ -103,12 +106,13 @@ where last_three.app_id = d.app_id and d.icd_code = mc.icd_code;
 /*Find 2 most recent prescriptions*/
 SELECT p2.*
 FROM patients p, prescriptions p2 
-WHERE p."name" = 'David Smith'
+WHERE p.patient_id = 26
   AND p.patient_id = p2.patient_id 
 ORDER BY p2.prescription_date  DESC 
 LIMIT 2;
 
-/*Get all patients who are vaccinated for a specific vaccine.*/
+
+/*Get all patients who are were administered a specific vaccinated at our practice.*/
 SELECT p.patient_id, p.name
 FROM patients p, appointments a, exams e, administered_vaccines v
 WHERE a.patient_id = p.patient_id
@@ -116,12 +120,12 @@ WHERE a.patient_id = p.patient_id
     AND v.exam_id = e.exam_id
     AND v.vaccine_type = 'Poliovirus';
 
-/* IMPROVED VACCINATION because it accounts for vaccinations that occurr outside practice  */
+/* IMPROVED VACCINATION because it accounts for vaccinations that occur inside AND outside practice  */
 SELECT p.*
 FROM immunized_patients ip 
 	JOIN patients p USING(patient_id)
 	JOIN immunizations i ON ip.immun_id = i.immunization_id 
-	WHERE i.immunization_type = 'Poliovirus';
+WHERE i.immunization_type = 'Poliovirus';
 
 /*Get all patients who were prescribed a specific drug.
 In case of recall, or price jumps of brand-name */
@@ -134,7 +138,7 @@ WHERE d.patient_id = p.patient_id
 SELECT c.name, c.phone_1, c.phone_2
 FROM patients p, emergency_contacts c
 WHERE p.patient_id = c.patient_id
-    AND p.name = 'Barbara Jones';
+    AND p.patient_id = 211;
 
 /*See the date of the most recent appointment of a patient
 For front-desk appointment scheduling.*/
@@ -149,7 +153,8 @@ SELECT p.*, AVG(a.weight) AS avg_weight, MIN(a.weight) AS min_weight,
     MIN(a.temperature) AS min_temperature, MAX(a.temperature) AS max_temperature, 
     MAX(a.height) AS height
 FROM appointments a NATURAL JOIN patients p 
-WHERE p."name" ='Amanda Zavala' AND a."date" > current_timestamp - INTERVAL '1 year'
+WHERE p."name" ='Amanda Zavala' 
+  AND a."date" > current_timestamp - INTERVAL '1 year'
 GROUP BY p.patient_id;
 
 /* Find the most prescribed medications */
@@ -170,6 +175,7 @@ LIMIT 5;
 /* Sort all patients in descending order of the number of appointments they had in the past week */
 SELECT count(*) AS count, p.* 
 FROM appointments a, patients p
-WHERE a.patient_id = p.patient_id AND a."date" > current_timestamp - INTERVAL '1 week'
+WHERE a.patient_id = p.patient_id 
+  AND a."date" > current_timestamp - INTERVAL '1 week'
 GROUP BY p.patient_id 
 ORDER BY count DESC;
