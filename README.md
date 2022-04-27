@@ -34,6 +34,10 @@ heroku login -i
 
 heroku create
 
+heroku apps # OPTIONAL: to get the application name
+
+heroku config -a your-app-name # OPTIONAL: to get the database url
+
 heroku addons:create heroku-postgresql:hobby-dev
 
 heroku pg:psql -a your-app-name
